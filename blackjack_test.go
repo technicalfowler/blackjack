@@ -44,6 +44,26 @@ func TestCard(t *testing.T) {
 		t.Error("King of Spades does not evaluate to 10")
 	}
 	
+}
 
-	
+func TestHand(t *testing.T) {
+	// 2 cards, 9 and 10 of spades
+	var hand []card
+	hand = append(hand, card{suit:"S", value: "10"})
+	hand = append(hand, card{suit:"S", value: "9"})
+	// score of hand should be 19
+	if scoreHand(hand) != 19 {
+		t.Error("Hand does not correctly score",
+			"Got", scoreHand(hand),
+			"expected", 19)
+	}
+
+	// 3 cards, 9 and 10 of spades and Ace of spades
+	hand = append(hand, card{suit:"S", value: "A"})
+
+	if scoreHand(hand) != 21 {
+		t.Error("Hand doesnt score correctly\n",
+			"Got", scoreHand(hand),
+			"expected", 21)
+	}
 }
