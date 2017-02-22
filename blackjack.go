@@ -4,8 +4,9 @@ import (
 	"bufio"
 	"fmt"
 	"math/rand"
-	"time"
 	"os"
+	"strings"
+	"time"
 )
 
 type deck []card
@@ -18,14 +19,28 @@ func main() {
 
 	var hand = hand{ cards:deck[0:2] }
 	deck = deck[2:]
-	hand.score()
-	hand.toString()
 
-	reader := bufio.NewReader(os.Stdin)
-	fmt.Print("stand or hit?")
-	cmd, _ := reader.ReadString('\n')
-	fmt.Println("you chose", cmd)
+        reader := bufio.NewReader(os.Stdin)
+
+	for {
+		hand.toString()
+
+		fmt.Print("Options:\n1)stand\n2)hit\n")
+
+		cmd, _ := reader.ReadString('\n')
+		cmd = strings.TrimRight(cmd, "\n")
+
+		fmt.Print("you chose:", cmd, ":")
+		fmt.Print("----\n")
+
+		if cmd == "hit" {
+			var newCardArray []card
+			deck, newCardArray = hit(deck)
+			hand.cards = append(hand.cards,newCardArray[0])
+		}
+	}
 }
+
 
 /* Card */
 type card struct {
@@ -105,16 +120,17 @@ func (d deck) randomize() []card {
 }
 
 /* return a card from the deck */
-func (d deck) hit() card {
+func hit(d []card) ([]card, []card) {
 	fmt.Println("size of deck", len(d))
-	c := d[0]
+	var c []card
+	c = append(c, d[0])
 	fmt.Println("card drawn", c)
 
 	/* slice the array */
 	d = d[1:]
-	fmt.Println("new size of deck")
+	fmt.Println("new size of deck", len(d))
 
-	return c
+	return d, c
 }
 
 
@@ -209,9 +225,11 @@ func (h *hand) beats(opp *hand) bool {
 }
 
 func (h *hand) toString() {
+	curScore := h.score()
 	for _, c := range h.cards {
 		c.toString()
 	}
+	fmt.Println("Score:", curScore)
 }
 
 /* Helper functions to determine if a given score exists in a hands scores permutations
