@@ -1,6 +1,6 @@
 package main
 
-import ( 
+import (
 	"bufio"
 	"fmt"
 	"math/rand"
@@ -14,17 +14,14 @@ type deck []card
 func main() {
 	deck := createDeck()
 	deck = deck.randomize()
-	
-	
 
-	var hand = hand{ cards:deck[0:2] }
+	var hand = hand{cards: deck[0:2]}
 	deck = deck[2:]
 
-        reader := bufio.NewReader(os.Stdin)
+	reader := bufio.NewReader(os.Stdin)
 
-	for loopctrl:= true; loopctrl != false; {
+	for loopctrl := true; loopctrl != false; {
 		hand.toString()
-
 
 		fmt.Print("Options:\n1)stand\n2)hit\n")
 		cmd, _ := reader.ReadString('\n')
@@ -34,93 +31,92 @@ func main() {
 		fmt.Print("----\n")
 
 		switch cmd {
-			case "hit": 
-				var newCardArray []card
-				deck, newCardArray = hit(deck)
-				hand.cards = append(hand.cards,newCardArray[0])
-				if hand.busts() {
-					hand.toString()
-					loopctrl = false
-				}
-			case "stand":
-				fmt.Print("You chose to stand\n")
+		case "hit":
+			var newCardArray []card
+			deck, newCardArray = hit(deck)
+			hand.cards = append(hand.cards, newCardArray[0])
+			if hand.busts() {
 				hand.toString()
 				loopctrl = false
-			default:
-				loopctrl = false
+			}
+		case "stand":
+			fmt.Print("You chose to stand\n")
+			hand.toString()
+			loopctrl = false
+		default:
+			loopctrl = false
 		}
 	}
 }
 
-
 /* Card */
 type card struct {
-        suit    string
-        value   string
+	suit  string
+	value string
 }
 
-
 func (c *card) toString() {
-        fmt.Println(c.value + " " + c.suit )
+	fmt.Println(c.value + " " + c.suit)
 }
 func (c *card) isAce() bool {
 	if c.value != "A" {
 		return false
 	}
-	return true 
+	return true
 }
 
-var numValues = map[string]int {
-	"2": 2,
-	"3": 3,
-	"4": 4,
-	"5": 5,
-	"6": 6,
-	"7": 7,
-	"8": 8,
-	"9": 9,
+var numValues = map[string]int{
+	"2":  2,
+	"3":  3,
+	"4":  4,
+	"5":  5,
+	"6":  6,
+	"7":  7,
+	"8":  8,
+	"9":  9,
 	"10": 10,
-	"J": 10,
-	"Q": 10,
-	"K": 10,
-	"A": 11,
+	"J":  10,
+	"Q":  10,
+	"K":  10,
+	"A":  11,
 }
+
 func (c *card) numValue() int {
-	return numValues[c.value]	
+	return numValues[c.value]
 }
 
-var suits = []string{"H","S","D","C"}
-var faces = []string{ "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A" }
+var suits = []string{"H", "S", "D", "C"}
+var faces = []string{"2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"}
 
-func createDeck() deck{
+func createDeck() deck {
 	var d []card
 	var faceSize = len(faces)
 	for i := 0; i < 4; i++ {
 		suit := suits[i]
 		for j := 0; j < faceSize; j++ {
 			face := faces[j]
-			c := card{ suit: suit, value: face }
-			d = append(d,c)
+			c := card{suit: suit, value: face}
+			d = append(d, c)
 		}
 	}
 
 	return d
 }
 
-func (d deck) randomize() []card { 
+func (d deck) randomize() []card {
 	rand.Seed(time.Now().UTC().UnixNano())
-	var newDeck deck 
+	var newDeck deck
 	for {
 		/* Copy card from random index */
 		randidx := rand.Intn(len(d))
-		c := d[ randidx ]
+		c := d[randidx]
 		newDeck = append(newDeck, c)
 
 		/* Set random index element to last element of deck */
-		d[ randidx ] = d[ len(d)-1 ]
+		d[randidx] = d[len(d)-1]
 
 		/* Reallocate deck to be one element smaller */
-		d = d[ 0 : len(d)-1 ] 
+		d = d[0 : len(d)-1]
 
 		if len(d) == 0 {
 			break
@@ -132,7 +128,7 @@ func (d deck) randomize() []card {
 
 /* return a card from the deck */
 /* #TODO: make hit a function of hand(), that way we can know when you bust on a hit in this method
-*/
+ */
 func hit(d []card) ([]card, []card) {
 	fmt.Println("size of deck", len(d))
 	var c []card
@@ -146,7 +142,6 @@ func hit(d []card) ([]card, []card) {
 	return d, c
 }
 
-
 /* Hand */
 type hand struct {
 	cards []card
@@ -156,17 +151,17 @@ type hand struct {
 
 func (h *hand) score() int {
 	// initialize scores array for hand
-	h.scores = []int{0} 
-        for _, c := range h.cards {
+	h.scores = []int{0}
+	for _, c := range h.cards {
 		h._updateScores(c)
-        }
+	}
 
 	/* Get "best" score for this hand. Best is defined as either:
-		1. Highest total without breaking 21
-		2. If no scores < 21, the lowest total score */
+	1. Highest total without breaking 21
+	2. If no scores < 21, the lowest total score */
 	score := 0
 	for _, s := range h.scores {
-		if (s > score && s <=21) {
+		if s > score && s <= 21 {
 			score = s
 		}
 	}
@@ -181,7 +176,7 @@ func (h *hand) score() int {
 		}
 
 	}
-	
+
 	return score
 }
 
@@ -190,7 +185,7 @@ func (h *hand) _updateScores(c card) {
 	/* If we see any Aces, capture potential scores if it is valued at 1 instead of 11 */
 	var lowAceScores []int
 
-	/* Account for Aces being valued at either 1 or 11 
+	/* Account for Aces being valued at either 1 or 11
 	Double the scores array in a hand, apply 11 to half, apply 1 to half */
 	if c.isAce() {
 		//current scores will need to be doubled, apply 11 to one half, 1 to the other
@@ -199,7 +194,7 @@ func (h *hand) _updateScores(c card) {
 		for i := range lowAceScores {
 			lowAceScores[i] += 1
 		}
-			
+
 	}
 
 	for i := range h.scores {
@@ -208,11 +203,11 @@ func (h *hand) _updateScores(c card) {
 
 	if len(lowAceScores) > 0 {
 		//make enough room for all score permutations
-		newScores := make([]int, len(h.scores) * 2)
+		newScores := make([]int, len(h.scores)*2)
 		//populate our score permutations
 		copy(newScores, h.scores)
 		//add in any scores where Ace could be valued at 1
-		copy( newScores[ len(h.scores): ], lowAceScores )
+		copy(newScores[len(h.scores):], lowAceScores)
 		//write to the hand
 		h.scores = newScores
 	}
@@ -220,7 +215,7 @@ func (h *hand) _updateScores(c card) {
 
 /* does this hand bust */
 func (h *hand) busts() bool {
-	if h.score() > 21 { 
+	if h.score() > 21 {
 		return true
 	}
 	return false
@@ -233,7 +228,6 @@ func (h *hand) beats(opp *hand) bool {
 		return false
 	}
 
-	
 	return false
 }
 
@@ -249,28 +243,27 @@ func (h *hand) toString() {
 }
 
 /* Helper functions to determine if a given score exists in a hands scores permutations
-        and how many times is it seen */
+   and how many times is it seen */
 
 func (h *hand) hasScore(score int) bool {
 	timesScoreSeen := h.seenScore(score)
 
-        var sawScore bool = false
-        if timesScoreSeen > 0 {
-                sawScore = true
-        }
+	var sawScore bool = false
+	if timesScoreSeen > 0 {
+		sawScore = true
+	}
 
-        return sawScore
+	return sawScore
 }
 
 func (h *hand) seenScore(score int) int {
-        // how many elements in h.scores match our given score
-        seen := 0
-        for _, s := range h.scores {
-                if s == score {
-                        seen++
-                }
-        }
+	// how many elements in h.scores match our given score
+	seen := 0
+	for _, s := range h.scores {
+		if s == score {
+			seen++
+		}
+	}
 
-        return seen
+	return seen
 }
-
