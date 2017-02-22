@@ -129,4 +129,18 @@ func (h *hand) score() int {
 	return score
 }
 
+/* does this hand bust */
+func (h *hand) busts() bool {
+	if h.score() > 21 { 
+		return true
+	}
+	return false
+}
+
+/* given another hand, does this hand beat that hand? */
+/*
+func (h *hand) beats(opp *hand) bool {
+
+}
+*/
 

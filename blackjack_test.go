@@ -68,4 +68,25 @@ func TestHand(t *testing.T) {
 			"Got", h.score(),
 			"expected", 21)
 	}
+
+}
+
+func TestBust(t *testing.T) {
+	// 3 cards, all 10s
+	var cards []card
+	cards = append(cards, card{suit:"S", value: "10"})
+	cards = append(cards, card{suit:"H", value: "10"})
+	cards = append(cards, card{suit:"D", value: "10"})
+
+	h := hand{ cards:cards}
+	
+	if h.score() != 30 {
+		t.Error("Hand doesnt score correctly\n",
+			"Got", h.score(),
+			"Expected", 30)
+	}	
+	
+	if !h.busts() { 
+		t.Error("Hand doesn't bust")
+	}
 }
