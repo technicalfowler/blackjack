@@ -10,11 +10,27 @@ import (
 )
 
 type deck []card
+type player struct {
+    //can i name an instance var of type `hand` to have name `hand`?
+    hand        hand
+    isDealer    bool
+}
+
+/*
+#TODO: game holds the shoe, the collection of players, 
+knows how to deal a hand then deliver the score
+type game struct {
+    shoe    deck
+     
+}
+*/
 
 func main() {
 	deck := createDeck()
 	deck = deck.randomize()
 
+    var a = hand{cards: deck[0:2]}
+    a.toString()
 	var hand = hand{cards: deck[0:2]}
 	deck = deck[2:]
 
@@ -32,6 +48,7 @@ func main() {
 
 		switch cmd {
 		case "hit":
+            // #TODO clean this junk up -- gross
 			var newCardArray []card
 			deck, newCardArray = hit(deck)
 			hand.cards = append(hand.cards, newCardArray[0])
@@ -128,6 +145,10 @@ func (d deck) randomize() []card {
 
 /* return a card from the deck */
 /* #TODO: make hit a function of hand(), that way we can know when you bust on a hit in this method
+ * need to return the array of card[] representing the deck since we can't alter a slice by reference
+ *  also need to return the card drawn as a card[] with a single element since a function cannot have multiple return
+ *  types
+ *      #TODO -- change so hit returns only the card drawn and operates on the deck without needing to return?
  */
 func hit(d []card) ([]card, []card) {
 	fmt.Println("size of deck", len(d))

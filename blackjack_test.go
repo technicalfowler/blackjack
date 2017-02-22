@@ -2,9 +2,11 @@ package main
 
 import (
 	"testing"
+    "fmt"
 )
 
 func TestDeck(t *testing.T) {
+    fmt.Println("")
 	d := createDeck()
 	/* Decks should have 52 cards */
 	if len(d) != 52 {
@@ -174,4 +176,35 @@ func TestHandMultipleAces(t *testing.T) {
 	//4 cards, four Aces
 
 	//5 cards, four Aces
+}
+
+func TestPlayer(t *testing.T) {
+        d := createDeck()
+        d = d.randomize()
+
+        h := hand{cards: d[0:2]}
+        dh := hand{cards: d[2:4]}
+        p := player{ isDealer:false, hand: h } 
+    
+        dealer := player{ isDealer:true, hand: dh }
+        if !dealer.isDealer {
+            t.Error("Dealer does not recognize he is dealer",
+                "Got", dealer.isDealer,
+                "expected", true)
+        }
+        if p.isDealer {
+            t.Error("Player thinks he is dealer",
+                "Got", p.isDealer,
+                "expected", false)
+        }
+
+        fmt.Println("Dealers hand:", dealer.hand.cards)
+        fmt.Println("scores:", dealer.hand.score())
+
+        // test hit
+        var newCardArray []card
+        d, newCardArray = hit(d[4:])
+        dealer.hand.cards = append(dealer.hand.cards, newCardArray[0])
+        fmt.Println("Dealers hand:", dealer.hand.cards)
+        fmt.Println("scores:", dealer.hand.score())
 }
