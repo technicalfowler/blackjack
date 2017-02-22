@@ -111,7 +111,7 @@ type hand struct {
 	scores []int
 }
 
-func (h *hand) scoreHand() int {
+func (h *hand) score() int {
         hasAce := false
         score := 0
         for i := range h.cards {

@@ -54,18 +54,18 @@ func TestHand(t *testing.T) {
 
 	h := hand{ cards:cards}
 	// score of hand should be 19
-	if h.scoreHand() != 19 {
+	if h.score() != 19 {
 		t.Error("Hand does not correctly score",
-			"Got", h.scoreHand(),
+			"Got", h.score(),
 			"expected", 19)
 	}
 
 	// 3 cards, 9 and 10 of spades and Ace of spades
 	h.cards = append(h.cards, card{suit:"S", value: "A"})
 
-	if h.scoreHand() != 21 {
+	if h.score() != 21 {
 		t.Error("Hand doesnt score correctly\n",
-			"Got", h.scoreHand(),
+			"Got", h.score(),
 			"expected", 21)
 	}
 }
