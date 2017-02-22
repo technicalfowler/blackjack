@@ -12,9 +12,7 @@ func main() {
 
 	var hand = deck[0:2]
 	deck = deck[2:]
-	fmt.Println("size of hand is ", len(hand))
-	fmt.Println("size of deck is ", len(deck))
-	fmt.Println(hand,deck)
+	hand = append(hand, deck.hit())
 }
 
 /* Card */
@@ -26,6 +24,25 @@ type card struct {
 
 func (c *card) toString() {
         fmt.Println(c.value + " " + c.suit )
+}
+
+var numValues = map[string]int {
+	"2": 2,
+	"3": 3,
+	"4": 4,
+	"5": 5,
+	"6": 6,
+	"7": 7,
+	"8": 8,
+	"9": 9,
+	"10": 10,
+	"J": 10,
+	"Q": 10,
+	"K": 10,
+	"A": 11,
+}
+func (c *card) numValue() int {
+	return numValues[c.value]	
 }
 
 /* Deck */
@@ -67,7 +84,18 @@ func (d deck) randomize() {
 	}
 }
 
+/* return a card from the deck */
+func (d deck) hit() card {
+	fmt.Println("size of deck", len(d))
+	c := d[0]
+	fmt.Println("card drawn", c)
 
+	/* slice the array */
+	d = d[1:]
+	fmt.Println("new size of deck")
+
+	return c
+}
 
 
 
