@@ -15,14 +15,6 @@ func main() {
 	hand = append(hand, deck.hit())
 }
 
-func scoreHand(h []card) int {
-	score := 0
-	for i := range h {
-		score += h[i].numValue()
-	}
-	return score
-}
-
 /* Card */
 type card struct {
         suit    string
@@ -111,5 +103,30 @@ func (d deck) hit() card {
 	return c
 }
 
+
+/* Hand */
+type hand struct {
+	cards []card
+	// all potential scores the hand could have (dealing with aces)
+	scores []int
+}
+
+func (h *hand) scoreHand() int {
+        hasAce := false
+        score := 0
+        for i := range h.cards {
+                if h.cards[i].isAce() {
+                        hasAce = true
+                }
+                score += h.cards[i].numValue()
+        }
+
+        // If hand has an Ace, and busts, rescore with Ace = 2?
+        if (score > 21 && hasAce) {
+                fmt.Println("Hand has an ace, busts with score of %d, hand is:",
+                        score, h)
+        }
+	return score
+}
 
 

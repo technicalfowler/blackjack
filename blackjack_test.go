@@ -48,22 +48,24 @@ func TestCard(t *testing.T) {
 
 func TestHand(t *testing.T) {
 	// 2 cards, 9 and 10 of spades
-	var hand []card
-	hand = append(hand, card{suit:"S", value: "10"})
-	hand = append(hand, card{suit:"S", value: "9"})
+	var cards []card
+	cards = append(cards, card{suit:"S", value: "10"})
+	cards = append(cards, card{suit:"S", value: "9"})
+
+	h := hand{ cards:cards}
 	// score of hand should be 19
-	if scoreHand(hand) != 19 {
+	if h.scoreHand() != 19 {
 		t.Error("Hand does not correctly score",
-			"Got", scoreHand(hand),
+			"Got", h.scoreHand(),
 			"expected", 19)
 	}
 
 	// 3 cards, 9 and 10 of spades and Ace of spades
-	hand = append(hand, card{suit:"S", value: "A"})
+	h.cards = append(h.cards, card{suit:"S", value: "A"})
 
-	if scoreHand(hand) != 21 {
+	if h.scoreHand() != 21 {
 		t.Error("Hand doesnt score correctly\n",
-			"Got", scoreHand(hand),
+			"Got", h.scoreHand(),
 			"expected", 21)
 	}
 }
