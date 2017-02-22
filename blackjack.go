@@ -112,20 +112,27 @@ type hand struct {
 }
 
 func (h *hand) score() int {
-        hasAce := false
+	numAces := 0
         score := 0
+	var scores = []int{0}
         for i := range h.cards {
+      		score += h.cards[i].numValue()
+		// for each Ace, record a new potential score with value of 11 or 2
                 if h.cards[i].isAce() {
-                        hasAce = true
+			numAces++
+			//11 has already been added to score, make new score with potential of 2
+			//create new score	
                 }
-                score += h.cards[i].numValue()
         }
 
+	// for each ace seen, create potential new scores based on 2 <=> 11
+
         // If hand has an Ace, and busts, rescore with Ace = 2?
-        if (score > 21 && hasAce) {
+        if (score > 21 && numAces > 0) {
                 fmt.Println("Hand has an ace, busts with score of %d, hand is:",
                         score, h)
         }
+
 	return score
 }
 
@@ -138,9 +145,13 @@ func (h *hand) busts() bool {
 }
 
 /* given another hand, does this hand beat that hand? */
-/*
 func (h *hand) beats(opp *hand) bool {
+	// assume the opponent hand is valid, so if this hand busts, it does not beat opp
+	if h.busts() {
+		return false
+	}
 
+	
+	return false
 }
-*/
 
