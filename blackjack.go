@@ -1,18 +1,30 @@
 package main
 
 import ( 
+	"bufio"
 	"fmt"
 	"math/rand"
 	"time"
+	"os"
 )
+
+type deck []card
 
 func main() {
 	deck := createDeck()
-	deck.randomize()
+	deck = deck.randomize()
+	
+	
 
-	var hand = deck[0:2]
+	var hand = hand{ cards:deck[0:2] }
 	deck = deck[2:]
-	hand = append(hand, deck.hit())
+	hand.score()
+	hand.toString()
+
+	reader := bufio.NewReader(os.Stdin)
+	fmt.Print("stand or hit?")
+	cmd, _ := reader.ReadString('\n')
+	fmt.Println("you chose", cmd)
 }
 
 /* Card */
@@ -51,13 +63,10 @@ func (c *card) numValue() int {
 	return numValues[c.value]	
 }
 
-/* Deck */
-type deck []card
-
 var suits = []string{"H","S","D","C"}
 var faces = []string{ "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A" }
 
-func createDeck() deck {
+func createDeck() deck{
 	var d []card
 	var faceSize = len(faces)
 	for i := 0; i < 4; i++ {
@@ -72,11 +81,10 @@ func createDeck() deck {
 	return d
 }
 
-func (d deck) randomize() {
+func (d deck) randomize() []card { 
 	rand.Seed(time.Now().UTC().UnixNano())
-	var newDeck []card
-	var deckSize = len(d)
-	for i := 0; i < deckSize; i++ {
+	var newDeck deck 
+	for {
 		/* Copy card from random index */
 		randidx := rand.Intn(len(d))
 		c := d[ randidx ]
@@ -87,7 +95,13 @@ func (d deck) randomize() {
 
 		/* Reallocate deck to be one element smaller */
 		d = d[ 0 : len(d)-1 ] 
+
+		if len(d) == 0 {
+			break
+		}
 	}
+
+	return newDeck
 }
 
 /* return a card from the deck */
@@ -192,6 +206,12 @@ func (h *hand) beats(opp *hand) bool {
 
 	
 	return false
+}
+
+func (h *hand) toString() {
+	for _, c := range h.cards {
+		c.toString()
+	}
 }
 
 /* Helper functions to determine if a given score exists in a hands scores permutations

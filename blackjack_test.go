@@ -2,7 +2,6 @@ package main
 
 import (
 	"testing"
-	"fmt"
 )
 
 
@@ -15,6 +14,24 @@ func TestDeck(t *testing.T) {
 			"expected", 52,
 			"got",	len(d),
 		)
+	}
+}
+
+func TestDeckUniques(t *testing.T) {
+	for i := 0; i < 10; i++ {
+		d := createDeck()
+		d = d.randomize()
+		
+		//iterate through each card in the deck to see if there are duplicates
+		for j := 0; j < len(d); j++ {
+			c := d[j]
+			for _, sib := range d[j+1:] {
+				if (sib.suit == c.suit && sib.value == c.value) {
+					t.Error("Deck is not unique, found multiples of",	
+						c.suit, c.value)
+				}
+			}
+		}
 	}
 }
 
@@ -155,7 +172,6 @@ func TestHandMultipleAces(t *testing.T) {
 		}
 	}
 
-	fmt.Println(hb)
 
 	//4 cards, four Aces
 
