@@ -22,21 +22,32 @@ func main() {
 
         reader := bufio.NewReader(os.Stdin)
 
-	for {
+	for loopctrl:= true; loopctrl != false; {
 		hand.toString()
 
-		fmt.Print("Options:\n1)stand\n2)hit\n")
 
+		fmt.Print("Options:\n1)stand\n2)hit\n")
 		cmd, _ := reader.ReadString('\n')
 		cmd = strings.TrimRight(cmd, "\n")
 
 		fmt.Print("you chose:", cmd, ":")
 		fmt.Print("----\n")
 
-		if cmd == "hit" {
-			var newCardArray []card
-			deck, newCardArray = hit(deck)
-			hand.cards = append(hand.cards,newCardArray[0])
+		switch cmd {
+			case "hit": 
+				var newCardArray []card
+				deck, newCardArray = hit(deck)
+				hand.cards = append(hand.cards,newCardArray[0])
+				if hand.busts() {
+					hand.toString()
+					loopctrl = false
+				}
+			case "stand":
+				fmt.Print("You chose to stand\n")
+				hand.toString()
+				loopctrl = false
+			default:
+				loopctrl = false
 		}
 	}
 }
@@ -120,6 +131,8 @@ func (d deck) randomize() []card {
 }
 
 /* return a card from the deck */
+/* #TODO: make hit a function of hand(), that way we can know when you bust on a hit in this method
+*/
 func hit(d []card) ([]card, []card) {
 	fmt.Println("size of deck", len(d))
 	var c []card
@@ -230,6 +243,9 @@ func (h *hand) toString() {
 		c.toString()
 	}
 	fmt.Println("Score:", curScore)
+	if h.busts() {
+		fmt.Println("Busted!!")
+	}
 }
 
 /* Helper functions to determine if a given score exists in a hands scores permutations
