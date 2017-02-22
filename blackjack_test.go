@@ -2,6 +2,7 @@ package main
 
 import (
 	"testing"
+	"fmt"
 )
 
 
@@ -89,4 +90,74 @@ func TestBust(t *testing.T) {
 	if !h.busts() { 
 		t.Error("Hand doesn't bust")
 	}
+}
+
+func TestHandMultipleAces(t *testing.T) {
+	//3 cards, two Aces
+	aa := card{suit:"S", value: "5"}
+	ab := card{suit:"S", value: "A"}
+	ac := card{suit:"H", value: "A"}
+	cardsa := []card{aa,ab,ac}
+	ha := hand{cards:cardsa}
+	ha.score()
+
+	/* Possible scores include:
+		7: 5 + A(1) + A(1)
+		17: 5 + A(11) + A(1)
+		17: 5 + A(1) + A(11)
+		27: 5 + A(11) + A(11)
+	*/
+	// 7, 17, 27
+	for _, score := range []int{7, 17, 27} {
+		if !ha.hasScore(score) {
+			t.Error("hand does not calculate possible score",
+				"Got", ha.hasScore(score),
+				"expected", true)
+		}
+	}
+	// Did we calculate 17 twice?
+	if ha.seenScore(17) != 2 {
+		t.Error("hand did not find score of 17 calculated in two separate permutations",	
+			"Got", ha.seenScore(17),
+			"expected", 2)
+	}
+	// "Best" score is 17 -- highest of three unique scores without going over 21
+	if ha.score() != 17 {
+		t.Error("hand did not calculate 17 as the best score",
+			"Got", ha.score(),
+			"expected", 17)
+	}
+
+	//4 cards, three Aces
+	ba := card{suit:"S", value:"4"}
+	bb := card{suit:"S", value:"A"}
+	bc := card{suit:"D", value:"A"}
+	bd := card{suit:"H", value:"A"}
+	cardsb := []card{ba,bb,bc,bd}
+	hb := hand{ cards:cardsb }
+	hb.score()
+
+	/* Possible scores include:
+		7: 4 + A(1) + A(1) + A(1)
+		17: 4 + A(11) + A(1) + A(1)
+		27: 4 + A(11) + A(11) + A(1)
+		37: 4 + A(11) + A(11) + A(11)
+		27: 4 + A(11) + A(1) + A(11)
+		17: 4 + A(1) + A(11) + A(1)
+		27: 4 + A(1) + A(11) + A(11)
+		17: 4 + A(1) + A(1) + A(11)	
+	*/
+	for _, score := range []int{7, 17, 27, 37} {
+		if !hb.hasScore(score) {
+			t.Error("Hand does not recognize score", score, "as a potential score",
+				"Got", ha.hasScore(score),
+				"expected", true)
+		}
+	}
+
+	fmt.Println(hb)
+
+	//4 cards, four Aces
+
+	//5 cards, four Aces
 }

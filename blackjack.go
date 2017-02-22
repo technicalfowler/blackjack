@@ -194,3 +194,29 @@ func (h *hand) beats(opp *hand) bool {
 	return false
 }
 
+/* Helper functions to determine if a given score exists in a hands scores permutations
+        and how many times is it seen */
+
+func (h *hand) hasScore(score int) bool {
+	timesScoreSeen := h.seenScore(score)
+
+        var sawScore bool = false
+        if timesScoreSeen > 0 {
+                sawScore = true
+        }
+
+        return sawScore
+}
+
+func (h *hand) seenScore(score int) int {
+        // how many elements in h.scores match our given score
+        seen := 0
+        for _, s := range h.scores {
+                if s == score {
+                        seen++
+                }
+        }
+
+        return seen
+}
+
