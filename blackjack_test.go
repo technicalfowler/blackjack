@@ -63,10 +63,10 @@ func TestHand(t *testing.T) {
 	// 3 cards, 9 and 10 of spades and Ace of spades
 	h.cards = append(h.cards, card{suit:"S", value: "A"})
 
-	if h.score() != 21 {
+	if h.score() != 20 {
 		t.Error("Hand doesnt score correctly\n",
 			"Got", h.score(),
-			"expected", 21)
+			"expected", 20)
 	}
 
 }

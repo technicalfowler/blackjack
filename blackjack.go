@@ -112,28 +112,67 @@ type hand struct {
 }
 
 func (h *hand) score() int {
-	numAces := 0
-        score := 0
-	var scores = []int{0}
-        for i := range h.cards {
-      		score += h.cards[i].numValue()
-		// for each Ace, record a new potential score with value of 11 or 2
-                if h.cards[i].isAce() {
-			numAces++
-			//11 has already been added to score, make new score with potential of 2
-			//create new score	
-                }
+	// initialize scores array for hand
+	h.scores = []int{0} 
+        for _, c := range h.cards {
+		h._updateScores(c)
         }
 
-	// for each ace seen, create potential new scores based on 2 <=> 11
+	/* Get "best" score for this hand. Best is defined as either:
+		1. Highest total without breaking 21
+		2. If no scores < 21, the lowest total score */
+	score := 0
+	for _, s := range h.scores {
+		if (s > score && s <=21) {
+			score = s
+		}
+	}
 
-        // If hand has an Ace, and busts, rescore with Ace = 2?
-        if (score > 21 && numAces > 0) {
-                fmt.Println("Hand has an ace, busts with score of %d, hand is:",
-                        score, h)
-        }
+	// Didn't find a valid score that was <= 21
+	// Return the smallest score > 21
+	if score == 0 {
+		for _, s := range h.scores {
+			if score < s {
+				score = s
+			}
+		}
 
+	}
+	
 	return score
+}
+
+func (h *hand) _updateScores(c card) {
+	score := c.numValue()
+	/* If we see any Aces, capture potential scores if it is valued at 1 instead of 11 */
+	var lowAceScores []int
+
+	/* Account for Aces being valued at either 1 or 11 
+	Double the scores array in a hand, apply 11 to half, apply 1 to half */
+	if c.isAce() {
+		//current scores will need to be doubled, apply 11 to one half, 1 to the other
+		lowAceScores = make([]int, len(h.scores))
+		copy(lowAceScores, h.scores)
+		for i := range lowAceScores {
+			lowAceScores[i] += 1
+		}
+			
+	}
+
+	for i := range h.scores {
+		h.scores[i] += score
+	}
+
+	if len(lowAceScores) > 0 {
+		//make enough room for all score permutations
+		newScores := make([]int, len(h.scores) * 2)
+		//populate our score permutations
+		copy(newScores, h.scores)
+		//add in any scores where Ace could be valued at 1
+		copy( newScores[ len(h.scores): ], lowAceScores )
+		//write to the hand
+		h.scores = newScores
+	}
 }
 
 /* does this hand bust */
