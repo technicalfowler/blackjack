@@ -2,7 +2,6 @@ package main
 
 import (
 	"testing"
-	"fmt"
 )
 
 
@@ -24,17 +23,27 @@ func TestCard(t *testing.T) {
 	if a.numValue() != 2 {
 		t.Error("2 of clubs does not evaluate to 2")
 	}
+	// Does this card know it is not an Ace
+	if a.isAce() {
+		t.Error("2 of clubs thinks its an Ace")
+	}
 
 	//Ace of Spades -- numValue should be 2 or 11
 	b := card{suit: "S", value: "A"}
 	if b.numValue() != 11 {
 		t.Error("Ace of spades does not evaluate to 11")
 	}
+	// does the card know its an Ace
+	if !b.isAce() {
+		t.Error("Ace of spades doesnt think its an Ace")
+	}
+
 	// King of Spades -- numValue: 10
 	c := card{suit: "S", value: "K"}
 	if c.numValue() != 10 {
 		t.Error("King of Spades does not evaluate to 10")
 	}
 	
+
 	
 }

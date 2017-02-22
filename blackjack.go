@@ -15,6 +15,14 @@ func main() {
 	hand = append(hand, deck.hit())
 }
 
+func scoreHand(h []card) int {
+	score := 0
+	for i := range h {
+		score += h[i].numValue()
+	}
+	return score
+}
+
 /* Card */
 type card struct {
         suit    string
@@ -24,6 +32,12 @@ type card struct {
 
 func (c *card) toString() {
         fmt.Println(c.value + " " + c.suit )
+}
+func (c *card) isAce() bool {
+	if c.value != "A" {
+		return false
+	}
+	return true 
 }
 
 var numValues = map[string]int {
