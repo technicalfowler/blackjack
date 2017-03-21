@@ -286,7 +286,7 @@ func (h *hand) seenScore(score int) int {
 	return seen
 }
 
-func (p *player) hit(d []card) (card) {
+func (p *player) hit(g game) (card) {
     fmt.Println("in player* hit -- p:", p)
 
     return card{ suit: "K", value: "12" }

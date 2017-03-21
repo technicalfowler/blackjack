@@ -235,7 +235,7 @@ func TestPlayerHit(t *testing.T) {
     
     fmt.Println("TestPlayerHit", "player", p)
     fmt.Println("expectedCard", expectedCard)
-    drawnCard := p.hit( g.shoe )
+    drawnCard := p.hit(g)
     fmt.Println("drawnCard", drawnCard)
 
     if expectedCard.value != drawnCard.value {
