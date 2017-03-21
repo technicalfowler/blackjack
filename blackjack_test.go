@@ -208,3 +208,28 @@ func TestPlayer(t *testing.T) {
         fmt.Println("Dealers hand:", dealer.hand.cards)
         fmt.Println("scores:", dealer.hand.score())
 }
+
+
+
+func TestGameShoe(t *testing.T) {
+    d := createDeck()
+    d = d.randomize()
+    g := game{ shoe: d }
+    
+    p := player{ hand: hand{cards:d[0:2]} }
+    fmt.Println("game:")
+    fmt.Println(g)
+    fmt.Println("player",p)
+}
+
+func TestPlayerHit(t *testing.T) {
+    d := createDeck()
+    d = d.randomize()
+
+    p := player{ hand: hand{cards: d[0:2]} }
+    g := game{ shoe: d }
+    
+    fmt.Println("TestPlayerHit", "player", p)
+    drawnCard := p.hit( g.shoe )
+    fmt.Println("drawnCard", drawnCard)
+} 

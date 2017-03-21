@@ -16,14 +16,11 @@ type player struct {
     isDealer    bool
 }
 
-/*
-#TODO: game holds the shoe, the collection of players, 
-knows how to deal a hand then deliver the score
+//#TODO: game holds the shoe, the collection of players, 
+//knows how to deal a hand then deliver the score
 type game struct {
     shoe    deck
-     
 }
-*/
 
 func main() {
 	deck := createDeck()
@@ -287,4 +284,11 @@ func (h *hand) seenScore(score int) int {
 	}
 
 	return seen
+}
+
+func (p *player) hit(d []card) (card) {
+    fmt.Println("in player* hit -- p:", p)
+
+    return card{ suit: "K", value: "12" }
+
 }
