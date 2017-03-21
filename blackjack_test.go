@@ -198,15 +198,15 @@ func TestPlayer(t *testing.T) {
                 "expected", false)
         }
 
-        fmt.Println("Dealers hand:", dealer.hand.cards)
-        fmt.Println("scores:", dealer.hand.score())
+        //fmt.Println("Dealers hand:", dealer.hand.cards)
+        //fmt.Println("scores:", dealer.hand.score())
 
         // test hit
         var newCardArray []card
         d, newCardArray = hit(d[4:])
         dealer.hand.cards = append(dealer.hand.cards, newCardArray[0])
-        fmt.Println("Dealers hand:", dealer.hand.cards)
-        fmt.Println("scores:", dealer.hand.score())
+        //fmt.Println("Dealers hand:", dealer.hand.cards)
+        //fmt.Println("scores:", dealer.hand.score())
 }
 
 
@@ -226,10 +226,27 @@ func TestPlayerHit(t *testing.T) {
     d := createDeck()
     d = d.randomize()
 
+    // create a player with two cards from the deck in his hand
     p := player{ hand: hand{cards: d[0:2]} }
     g := game{ shoe: d }
+
+    // we expect the drawn card to be the third card in the deck
+    expectedCard := d[2]
     
     fmt.Println("TestPlayerHit", "player", p)
+    fmt.Println("expectedCard", expectedCard)
     drawnCard := p.hit( g.shoe )
     fmt.Println("drawnCard", drawnCard)
+
+    if expectedCard.value != drawnCard.value {
+        t.Error("Did not draw expected card from player.hit()", 
+                "Expected value", expectedCard.value,
+                "Got value", drawnCard.value)
+    }
+    
+    if expectedCard.suit != drawnCard.suit {
+        t.Error("Did not draw expected card from player.hit()",
+                "Expected suit", expectedCard.suit,
+                "Got suit", drawnCard.suit)
+    }
 } 
