@@ -286,9 +286,37 @@ func (h *hand) seenScore(score int) int {
 	return seen
 }
 
+/* Generic method for a game to draw a card off of its shoe and then remove that card from the shoe
+ *
+ */
+func (g *game) draw() (card) {
+    fmt.Println("size of g.shoe", len(g.shoe))
+
+
+    drawnCard := g.shoe[0]
+    fmt.Println("card drawn", drawnCard)
+
+/*
+        //make enough room for all score permutations
+        newScores := make([]int, len(h.scores)*2)
+        //populate our score permutations
+        copy(newScores, h.scores)
+        //add in any scores where Ace could be valued at 1
+        copy(newScores[len(h.scores):], lowAceScores)
+        //write to the hand
+        h.scores = newScores
+    newShoe := make([]card, len(g.shoe)-1)
+*/
+
+
+    g.shoe = g.shoe[1:]
+    fmt.Println("size of g.shoe", len(g.shoe))
+
+    return drawnCard
+}
+
 func (p *player) hit(g game) (card) {
-    fmt.Println("in player* hit -- p:", p)
-
-    return card{ suit: "K", value: "12" }
-
+    drawnCard := g.draw()
+    p.hand.cards = append(p.hand.cards, drawnCard)
+    return drawnCard
 }

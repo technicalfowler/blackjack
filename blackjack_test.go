@@ -225,13 +225,22 @@ func TestGameShoe(t *testing.T) {
 func TestPlayerHit(t *testing.T) {
     d := createDeck()
     d = d.randomize()
-
-    // create a player with two cards from the deck in his hand
-    p := player{ hand: hand{cards: d[0:2]} }
     g := game{ shoe: d }
 
-    // we expect the drawn card to be the third card in the deck
-    expectedCard := d[2]
+    // create a player with two cards from the deck in his hand
+    var cards []card
+    cards = append(cards, g.draw() )
+    cards = append(cards, g.draw() )
+    p := player{ hand: hand{cards: cards} }
+
+    // reduce the deck as 
+
+//draw a few cards and make sure they match for multiple hits through the order
+    for i := 0; i <= 5; i++ {
+
+
+    // we expect the drawn card to be the first card remaining in the shoe 
+    expectedCard := g.shoe[0]
     
     fmt.Println("TestPlayerHit", "player", p)
     fmt.Println("expectedCard", expectedCard)
@@ -248,5 +257,7 @@ func TestPlayerHit(t *testing.T) {
         t.Error("Did not draw expected card from player.hit()",
                 "Expected suit", expectedCard.suit,
                 "Got suit", drawnCard.suit)
+    }
+
     }
 } 
